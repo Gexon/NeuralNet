@@ -55,6 +55,15 @@ namespace NeuralNet
             return result;
         }
 
+        public void SetWeights(params double[] weights)
+        {
+            //todo удалить после добавления возможности обучения сети.
+            for (int i = 0;i < weights.Length;i++)
+            {
+                Weight[i] = Weight[i];
+            }
+        }
+
         public override string ToString()
         {
             return Output.ToString();
