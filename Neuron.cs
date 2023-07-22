@@ -69,7 +69,7 @@ namespace NeuralNet
             //todo удалить после добавления возможности обучения сети.
             for (int i = 0; i < weights.Length; i++)
             {
-                Weight[i] = Weight[i];
+                Weight[i] = weights[i];
             }
         }
 
