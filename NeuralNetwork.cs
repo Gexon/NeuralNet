@@ -24,7 +24,7 @@ namespace NeuralNet
             //todo проверить кол-во входных сигналов к количеству входных нейронов нашей сети
             SendSignalsToInputNeurons(inputSignals); //ситаем первый входной слой
             FeedForwardAllLayersAfterInput(); //считаем все остальные слои
-            //конечный результат
+            //конечный результат 
             if (Topology.OutputCount == 1)
             {
                 return Layers.Last().Neurons[0];
