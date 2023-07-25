@@ -8,13 +8,14 @@ namespace NeuralNet
 {
     public class Layer
     {
-        public List<Neuron> Neurons;
-        public int Count => Neurons?.Count ?? 0;
-
+        public List<Neuron> Neurons;        
+        public int NeuronCount => Neurons?.Count ?? 0;
+        public NeuronType Type;
         public Layer(List<Neuron> neurons, NeuronType type = NeuronType.Normal)
         {
             //todo проверить входные параметры
             Neurons = neurons;
+            Type = type;
         }
 
         /// <summary>
@@ -29,6 +30,11 @@ namespace NeuralNet
                 result.Add(neuron.Output);
             }
             return result;
+        }
+
+        public override string ToString()
+        {
+            return Type.ToString();
         }
     }
 }
