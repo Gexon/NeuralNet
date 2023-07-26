@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -43,18 +44,108 @@ namespace NeuralNet
         /// <param name="dataset">набор входных данных(16 различных вариантов входных данных)</param>
         /// <param name="epoch">количество проходов сети(1000), используя набор входных данных</param>
         /// <returns>возвращаем среднее значение ошибки, после прохождения всех эпох</returns>
-        public double Learn(List<Tuple<double, double[]>> dataset, int epoch)
+        public double Learn(double[] expected, double[,] inputs, int epoch)
         {
             var error = 0.0;
+
             for (int i = 0; i < epoch; i++)
             {
-                foreach (var data in dataset)
+                for (int j = 0; j < expected.Length; j++)
                 {
-                    error += Backpropagation(data.Item1, data.Item2);
+                    var output = expected[j];
+                    var input = GetRow(inputs, j);                    
+                    error += Backpropagation(output, input);
                 }
             }
 
             var result = error / epoch;
+            return result;
+        }
+
+        // получаем строку с двумерного массива
+        public static double[] GetRow(double[,] matrix, int row)
+        {
+            var colums = matrix.GetLength(1);
+            var result = new double[colums];
+            for (int i = 0; i < colums; ++i)
+            {
+                result[i] = matrix[row, i];
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Скалирование датасета [0..1]
+        /// </summary>
+        /// <param name="inputs">Датасет</param>
+        /// <returns>Отмасштабированные данные</returns>
+        private double[,] Scalling(double[,] inputs)
+        {
+            var result = new double[inputs.GetLength(0), inputs.GetLength(1)];
+
+            for (int column = 0; column < inputs.GetLength(1); column++)
+            {
+                var min = inputs[0, column];
+                var max = inputs[0, column];
+
+                // ищем мин и макс
+                for (int row = 1; row < inputs.GetLength(0); row++)
+                {
+                    var item = inputs[row, column];
+                    if (item < min)
+                    {
+                        min = item;
+                    }
+                    if (item > max)
+                    {
+                        max = item;
+                    }
+                }
+
+                var divider = max - min;
+                for (int row = 1; row < inputs.GetLength(0); row++)
+                {
+                    result[row, column] = (inputs[row, column] - min) / divider;
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Нормализация датасета [-1..1] или [-2..2] =)
+        /// </summary>
+        /// <param name="inputs">Датасет</param>
+        /// <returns>Нормализованные данные</returns>
+        private double[,] Normalization(double[,] inputs)
+        {
+            var result = new double[inputs.GetLength(0), inputs.GetLength(1)];
+
+            for (int column = 0; column < inputs.GetLength(1); column++)
+            {
+                // вычисляем среднее значение сигнала нейрона
+                var sum = 0.0;
+                for (int row = 0; row < inputs.GetLength(0); row++)
+                {
+                    sum += inputs[row, column];
+                }
+                var average = sum / inputs.GetLength(0);
+
+                // стандартное квадратичное отклонение
+                var error = 0.0;
+                for (int row = 0; row < inputs.GetLength(0); row++)
+                {
+                    error += Math.Pow((inputs[row, column] - average), 2);
+                }
+                var standardError = Math.Sqrt(error / inputs.GetLength(0));
+
+                // нрмализованное значение
+                for (int row = 0; row < inputs.GetLength(0); row++)
+                {
+                    result[row, column] = (inputs[row, column] - average) / standardError;
+                }
+            }
+
             return result;
         }
 
