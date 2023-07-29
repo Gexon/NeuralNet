@@ -79,7 +79,7 @@ namespace NeuralNet
         /// </summary>
         /// <param name="inputs">Датасет</param>
         /// <returns>Отмасштабированные данные</returns>
-        private double[,] Scalling(double[,] inputs)
+        public double[,] Scalling(double[,] inputs)
         {
             var result = new double[inputs.GetLength(0), inputs.GetLength(1)];
 
@@ -117,7 +117,7 @@ namespace NeuralNet
         /// </summary>
         /// <param name="inputs">Датасет</param>
         /// <returns>Нормализованные данные</returns>
-        private double[,] Normalization(double[,] inputs)
+        public double[,] Normalization(double[,] inputs)
         {
             var result = new double[inputs.GetLength(0), inputs.GetLength(1)];
 
