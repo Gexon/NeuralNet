@@ -17,15 +17,16 @@ namespace NeuralNet
         {
             var result = new List<int>();
             var image = new Bitmap(path);
+            var resizeImage = new Bitmap(image, new Size(50,50));
 
-            Height = image.Height;
-            Width = image.Width;
+            Height = resizeImage.Height;
+            Width = resizeImage.Width;
 
-            for (int y = 0; y < image.Height; y++)
+            for (int y = 0; y < resizeImage.Height; y++)
             {
-                for (int x = 0; x < image.Width; x++)
+                for (int x = 0; x < resizeImage.Width; x++)
                 {
-                    var pixel = image.GetPixel(x, y);
+                    var pixel = resizeImage.GetPixel(x, y);
                     var brightness = Brightness(pixel);
                     result.Add(brightness);
                 }

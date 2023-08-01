@@ -20,7 +20,7 @@ namespace NeuralNet
             CreateOutputLayer();
         }
 
-        public Neuron FeedForward(params double[] inputSignals)
+        public Neuron Predict(params double[] inputSignals)
         {
             //todo проверить кол-во входных сигналов к количеству входных нейронов нашей сети
             SendSignalsToInputNeurons(inputSignals); //ситаем первый входной слой
@@ -41,7 +41,8 @@ namespace NeuralNet
         /// Каждое прохождение всего набора - это 1 эпоха, корерктирует веса всей сети равным количеству вариантов набора(16 раз).
         /// В данном тесте 1000 эпох, 1000*16 раз корректировалась сеть(16 000 раз).
         /// </summary>
-        /// <param name="dataset">набор входных данных(16 различных вариантов входных данных)</param>
+        /// <param name="expected">набор ожидаемых/правильных данных</param>
+        /// <param name="inputs">двумерный массив наборов входных данных (1 строка - 1 набор)</param>
         /// <param name="epoch">количество проходов сети(1000), используя набор входных данных</param>
         /// <returns>возвращаем среднее значение ошибки, после прохождения всех эпох</returns>
         public double Learn(double[] expected, double[,] inputs, int epoch)
@@ -157,7 +158,7 @@ namespace NeuralNet
         /// <returns></returns>
         private double Backpropagation(double expected, params double[] inputs)
         {
-            var actual = FeedForward(inputs).Output; // полученный результат с выходного нейрона после прохождения всей сети
+            var actual = Predict(inputs).Output; // полученный результат с выходного нейрона после прохождения всей сети
             var difference = actual - expected; // разница значений(Z), фактического значения на выходе нейрона и ожидаемого значения
 
             // корректировка весов(входящих связей) выходного(итогово, последнего) нейрона
